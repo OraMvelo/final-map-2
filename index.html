@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="data/LimpopoProvince_1.js"></script>
+        <script src="data/ActiveMines_2.js"></script>
+        <script src="data/NationalRoads_3.js"></script>
+        <script src="data/ModimelleIronOreSamples_4.js"></script>
+        <script src="data/MusinaZincSamples_5.js"></script>
+        <script src="data/PolokwaneCopperSamples_6.js"></script>
+        <script src="data/PolokwaneZincSamples_7.js"></script>
+        <script src="data/ThabazimbiIronOreSamples_8.js"></script>
+        <script src="data/TzaneenCopperSamples_9.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:false, maxZoom:28, minZoom:1
+        }).fitBounds([[-24.87177596704815,27.859228668175966],[-22.024419803077762,32.56657730041733]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        // remove popup's row if "visible-with-data"
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        // add class to format popup if it contains media
+		function addClassToPopupIfMedia(content, popup) {
+			var tempDiv = document.createElement('div');
+			tempDiv.innerHTML = content;
+			if (tempDiv.querySelector('td img')) {
+				popup._contentNode.classList.add('media');
+					// Delay to force the redraw
+					setTimeout(function() {
+						popup.update();
+					}, 10);
+			} else {
+				popup._contentNode.classList.remove('media');
+			}
+		}
+        var zoomControl = L.control.zoom({
+            position: 'topleft'
+        }).addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_OpenStreetMap_0');
+        map.getPane('pane_OpenStreetMap_0').style.zIndex = 400;
+        var layer_OpenStreetMap_0 = L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OpenStreetMap_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OpenStreetMap_0;
+        map.addLayer(layer_OpenStreetMap_0);
+        function pop_LimpopoProvince_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Province_Name</th>\
+                        <td class="visible-with-data" id="Province_Name">' + (feature.properties['Province_Name'] !== null ? autolinker.link(String(feature.properties['Province_Name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_LimpopoProvince_1_0() {
+            return {
+                pane: 'pane_LimpopoProvince_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_LimpopoProvince_1');
+        map.getPane('pane_LimpopoProvince_1').style.zIndex = 401;
+        map.getPane('pane_LimpopoProvince_1').style['mix-blend-mode'] = 'normal';
+        var layer_LimpopoProvince_1 = new L.geoJson(json_LimpopoProvince_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_LimpopoProvince_1',
+            layerName: 'layer_LimpopoProvince_1',
+            pane: 'pane_LimpopoProvince_1',
+            onEachFeature: pop_LimpopoProvince_1,
+            style: style_LimpopoProvince_1_0,
+        });
+        bounds_group.addLayer(layer_LimpopoProvince_1);
+        map.addLayer(layer_LimpopoProvince_1);
+        function pop_ActiveMines_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Mine Name</th>\
+                        <td class="visible-with-data" id="Mine Name">' + (feature.properties['Mine Name'] !== null ? autolinker.link(String(feature.properties['Mine Name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_ActiveMines_2_0() {
+            return {
+                pane: 'pane_ActiveMines_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(110,110,110,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_ActiveMines_2');
+        map.getPane('pane_ActiveMines_2').style.zIndex = 402;
+        map.getPane('pane_ActiveMines_2').style['mix-blend-mode'] = 'normal';
+        var layer_ActiveMines_2 = new L.geoJson(json_ActiveMines_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_ActiveMines_2',
+            layerName: 'layer_ActiveMines_2',
+            pane: 'pane_ActiveMines_2',
+            onEachFeature: pop_ActiveMines_2,
+            style: style_ActiveMines_2_0,
+        });
+        bounds_group.addLayer(layer_ActiveMines_2);
+        map.addLayer(layer_ActiveMines_2);
+        function pop_NationalRoads_3(feature, layer) {
+            var popupContent = '<table>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_NationalRoads_3_0() {
+            return {
+                pane: 'pane_NationalRoads_3',
+                opacity: 1,
+                color: 'rgba(196,60,57,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_NationalRoads_3');
+        map.getPane('pane_NationalRoads_3').style.zIndex = 403;
+        map.getPane('pane_NationalRoads_3').style['mix-blend-mode'] = 'normal';
+        var layer_NationalRoads_3 = new L.geoJson(json_NationalRoads_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_NationalRoads_3',
+            layerName: 'layer_NationalRoads_3',
+            pane: 'pane_NationalRoads_3',
+            onEachFeature: pop_NationalRoads_3,
+            style: style_NationalRoads_3_0,
+        });
+        bounds_group.addLayer(layer_NationalRoads_3);
+        map.addLayer(layer_NationalRoads_3);
+        function pop_ModimelleIronOreSamples_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Iron Ore (mg/kg)</th>\
+                        <td class="visible-with-data" id="Iro_Ore__mg_kg_">' + (feature.properties['Iro_Ore__mg_kg_'] !== null ? autolinker.link(String(feature.properties['Iro_Ore__mg_kg_']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_ModimelleIronOreSamples_4_0() {
+            return {
+                pane: 'pane_ModimelleIronOreSamples_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,117,217,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_ModimelleIronOreSamples_4');
+        map.getPane('pane_ModimelleIronOreSamples_4').style.zIndex = 404;
+        map.getPane('pane_ModimelleIronOreSamples_4').style['mix-blend-mode'] = 'normal';
+        var layer_ModimelleIronOreSamples_4 = new L.geoJson(json_ModimelleIronOreSamples_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_ModimelleIronOreSamples_4',
+            layerName: 'layer_ModimelleIronOreSamples_4',
+            pane: 'pane_ModimelleIronOreSamples_4',
+            onEachFeature: pop_ModimelleIronOreSamples_4,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_ModimelleIronOreSamples_4_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_ModimelleIronOreSamples_4);
+        map.addLayer(layer_ModimelleIronOreSamples_4);
+        function pop_MusinaZincSamples_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Zinc (mg/kg)</th>\
+                        <td class="visible-with-data" id="Zinc__mg_kg_">' + (feature.properties['Zinc__mg_kg_'] !== null ? autolinker.link(String(feature.properties['Zinc__mg_kg_']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_MusinaZincSamples_5_0() {
+            return {
+                pane: 'pane_MusinaZincSamples_5',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(246,159,116,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_MusinaZincSamples_5');
+        map.getPane('pane_MusinaZincSamples_5').style.zIndex = 405;
+        map.getPane('pane_MusinaZincSamples_5').style['mix-blend-mode'] = 'normal';
+        var layer_MusinaZincSamples_5 = new L.geoJson(json_MusinaZincSamples_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_MusinaZincSamples_5',
+            layerName: 'layer_MusinaZincSamples_5',
+            pane: 'pane_MusinaZincSamples_5',
+            onEachFeature: pop_MusinaZincSamples_5,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_MusinaZincSamples_5_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_MusinaZincSamples_5);
+        map.addLayer(layer_MusinaZincSamples_5);
+        function pop_PolokwaneCopperSamples_6(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Copper (mg/kg)</th>\
+                        <td class="visible-with-data" id="Copper__mg_kg_">' + (feature.properties['Copper__mg_kg_'] !== null ? autolinker.link(String(feature.properties['Copper__mg_kg_']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_PolokwaneCopperSamples_6_0() {
+            return {
+                pane: 'pane_PolokwaneCopperSamples_6',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(212,65,62,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_PolokwaneCopperSamples_6');
+        map.getPane('pane_PolokwaneCopperSamples_6').style.zIndex = 406;
+        map.getPane('pane_PolokwaneCopperSamples_6').style['mix-blend-mode'] = 'normal';
+        var layer_PolokwaneCopperSamples_6 = new L.geoJson(json_PolokwaneCopperSamples_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_PolokwaneCopperSamples_6',
+            layerName: 'layer_PolokwaneCopperSamples_6',
+            pane: 'pane_PolokwaneCopperSamples_6',
+            onEachFeature: pop_PolokwaneCopperSamples_6,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_PolokwaneCopperSamples_6_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_PolokwaneCopperSamples_6);
+        map.addLayer(layer_PolokwaneCopperSamples_6);
+        function pop_PolokwaneZincSamples_7(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Zinc (mg/kg)</th>\
+                        <td class="visible-with-data" id="Zinc__mg_kg_">' + (feature.properties['Zinc__mg_kg_'] !== null ? autolinker.link(String(feature.properties['Zinc__mg_kg_']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_PolokwaneZincSamples_7_0() {
+            return {
+                pane: 'pane_PolokwaneZincSamples_7',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(246,159,116,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_PolokwaneZincSamples_7');
+        map.getPane('pane_PolokwaneZincSamples_7').style.zIndex = 407;
+        map.getPane('pane_PolokwaneZincSamples_7').style['mix-blend-mode'] = 'normal';
+        var layer_PolokwaneZincSamples_7 = new L.geoJson(json_PolokwaneZincSamples_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_PolokwaneZincSamples_7',
+            layerName: 'layer_PolokwaneZincSamples_7',
+            pane: 'pane_PolokwaneZincSamples_7',
+            onEachFeature: pop_PolokwaneZincSamples_7,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_PolokwaneZincSamples_7_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_PolokwaneZincSamples_7);
+        map.addLayer(layer_PolokwaneZincSamples_7);
+        function pop_ThabazimbiIronOreSamples_8(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Iron Ore (mg/kg)</th>\
+                        <td class="visible-with-data" id="Iron_Ore__mg_kg_">' + (feature.properties['Iron_Ore__mg_kg_'] !== null ? autolinker.link(String(feature.properties['Iron_Ore__mg_kg_']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_ThabazimbiIronOreSamples_8_0() {
+            return {
+                pane: 'pane_ThabazimbiIronOreSamples_8',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,117,217,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_ThabazimbiIronOreSamples_8');
+        map.getPane('pane_ThabazimbiIronOreSamples_8').style.zIndex = 408;
+        map.getPane('pane_ThabazimbiIronOreSamples_8').style['mix-blend-mode'] = 'normal';
+        var layer_ThabazimbiIronOreSamples_8 = new L.geoJson(json_ThabazimbiIronOreSamples_8, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_ThabazimbiIronOreSamples_8',
+            layerName: 'layer_ThabazimbiIronOreSamples_8',
+            pane: 'pane_ThabazimbiIronOreSamples_8',
+            onEachFeature: pop_ThabazimbiIronOreSamples_8,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_ThabazimbiIronOreSamples_8_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_ThabazimbiIronOreSamples_8);
+        map.addLayer(layer_ThabazimbiIronOreSamples_8);
+        function pop_TzaneenCopperSamples_9(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Copper (mg/kg)</th>\
+                        <td class="visible-with-data" id="Copper__mg_kg_">' + (feature.properties['Copper__mg_kg_'] !== null ? autolinker.link(String(feature.properties['Copper__mg_kg_']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_TzaneenCopperSamples_9_0() {
+            return {
+                pane: 'pane_TzaneenCopperSamples_9',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(212,65,62,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_TzaneenCopperSamples_9');
+        map.getPane('pane_TzaneenCopperSamples_9').style.zIndex = 409;
+        map.getPane('pane_TzaneenCopperSamples_9').style['mix-blend-mode'] = 'normal';
+        var layer_TzaneenCopperSamples_9 = new L.geoJson(json_TzaneenCopperSamples_9, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_TzaneenCopperSamples_9',
+            layerName: 'layer_TzaneenCopperSamples_9',
+            pane: 'pane_TzaneenCopperSamples_9',
+            onEachFeature: pop_TzaneenCopperSamples_9,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_TzaneenCopperSamples_9_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_TzaneenCopperSamples_9);
+        map.addLayer(layer_TzaneenCopperSamples_9);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        var overlaysTree = [
+            {label: '<img src="legend/TzaneenCopperSamples_9.png" /> Tzaneen Copper Samples', layer: layer_TzaneenCopperSamples_9},
+            {label: '<img src="legend/ThabazimbiIronOreSamples_8.png" /> Thabazimbi Iron Ore Samples', layer: layer_ThabazimbiIronOreSamples_8},
+            {label: '<img src="legend/PolokwaneZincSamples_7.png" /> Polokwane Zinc Samples', layer: layer_PolokwaneZincSamples_7},
+            {label: '<img src="legend/PolokwaneCopperSamples_6.png" /> Polokwane Copper Samples', layer: layer_PolokwaneCopperSamples_6},
+            {label: '<img src="legend/MusinaZincSamples_5.png" /> Musina Zinc Samples', layer: layer_MusinaZincSamples_5},
+            {label: '<img src="legend/ModimelleIronOreSamples_4.png" /> Modimelle Iron Ore Samples', layer: layer_ModimelleIronOreSamples_4},
+            {label: '<img src="legend/NationalRoads_3.png" /> National Roads', layer: layer_NationalRoads_3},
+            {label: '<img src="legend/ActiveMines_2.png" /> Active Mines', layer: layer_ActiveMines_2},
+            {label: '<img src="legend/LimpopoProvince_1.png" /> Limpopo Province', layer: layer_LimpopoProvince_1},
+            {label: "OpenStreetMap", layer: layer_OpenStreetMap_0},]
+        var lay = L.control.layers.tree(null, overlaysTree,{
+            //namedToggle: true,
+            //selectorBack: false,
+            //closedSymbol: '&#8862; &#x1f5c0;',
+            //openedSymbol: '&#8863; &#x1f5c1;',
+            //collapseAll: 'Collapse all',
+            //expandAll: 'Expand all',
+            collapsed: false, 
+        });
+        lay.addTo(map);
+		document.addEventListener("DOMContentLoaded", function() {
+            // set new Layers List height which considers toggle icon
+            function newLayersListHeight() {
+                var layerScrollbarElement = document.querySelector('.leaflet-control-layers-scrollbar');
+                if (layerScrollbarElement) {
+                    var layersListElement = document.querySelector('.leaflet-control-layers-list');
+                    var originalHeight = layersListElement.style.height 
+                        || window.getComputedStyle(layersListElement).height;
+                    var newHeight = parseFloat(originalHeight) - 50;
+                    layersListElement.style.height = newHeight + 'px';
+                }
+            }
+            var isLayersListExpanded = true;
+            var controlLayersElement = document.querySelector('.leaflet-control-layers');
+            var toggleLayerControl = document.querySelector('.leaflet-control-layers-toggle');
+            // toggle Collapsed/Expanded and apply new Layers List height
+            toggleLayerControl.addEventListener('click', function() {
+                if (isLayersListExpanded) {
+                    controlLayersElement.classList.remove('leaflet-control-layers-expanded');
+                } else {
+                    controlLayersElement.classList.add('leaflet-control-layers-expanded');
+                }
+                isLayersListExpanded = !isLayersListExpanded;
+                newLayersListHeight()
+            });	
+			// apply new Layers List height if toggle layerstree
+			if (controlLayersElement) {
+				controlLayersElement.addEventListener('click', function(event) {
+					var toggleLayerHeaderPointer = event.target.closest('.leaflet-layerstree-header-pointer span');
+					if (toggleLayerHeaderPointer) {
+						newLayersListHeight();
+					}
+				});
+			}
+            // Collapsed/Expanded at Start to apply new height
+            setTimeout(function() {
+                toggleLayerControl.click();
+            }, 10);
+            setTimeout(function() {
+                toggleLayerControl.click();
+            }, 10);
+            // Collapsed touch/small screen
+            var isSmallScreen = window.innerWidth < 650;
+            if (isSmallScreen) {
+                setTimeout(function() {
+                    controlLayersElement.classList.remove('leaflet-control-layers-expanded');
+                    isLayersListExpanded = !isLayersListExpanded;
+                }, 500);
+            }  
+        });       
+        setBounds();
+        </script>
+    </body>
+</html>
